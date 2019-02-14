@@ -1,6 +1,7 @@
 package com.branchbit.ws.rest.service;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,9 +19,10 @@ public class ServiceLoginJR {
 	
 	@GET
 	@Path("/saludar/{nombre}")
-	@Produces({MediaType.TEXT_PLAIN})
+	@Consumes({MediaType.TEXT_HTML})
+	@Produces({MediaType.TEXT_HTML})
 	public Response Saludar(@PathParam("nombre") String nombre) {
-		return Response.status(200).entity("Tu nombre aaes "+nombre).build();
+		return Response.status(200).entity("Tu nombre es "+nombre).build();
 	}
 	
 
@@ -39,14 +41,10 @@ public class ServiceLoginJR {
 	@POST
 	@Path("/recibirParametro")
 	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON})
-	public Respuesta getServlet(Archivo archivo) {
-		archivo.setFolio("1");
-		if(archivo.getFolio().equals("1")) {
-			System.out.println("Ok");
-		}
-		
-		Respuesta respuesta=new Respuesta(false,"Archivo procesado correctamente");
-		return respuesta;
+	@Produces({MediaType.TEXT_HTML})
+	public String getServlet(String json) {
+		return json;
 	}
+	
+	
 }

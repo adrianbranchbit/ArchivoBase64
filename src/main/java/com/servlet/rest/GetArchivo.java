@@ -5,6 +5,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import org.apache.commons.codec.binary.Base64;
+import org.json.JSONObject;
 
 import com.branchbit.ws.rest.vo.Archivo;
 
@@ -59,9 +62,11 @@ public class GetArchivo extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		String nombre = request.getParameter("usuario");
-		String password = request.getParameter("password");
+
+		/*
+		 * String nombre = request.getParameter("usuario"); String password =
+		 * request.getParameter("password");
+		 */
 		Part archivo = request.getPart("archivo");
 		int size = (int) archivo.getSize();
 
@@ -79,62 +84,87 @@ public class GetArchivo extends HttpServlet {
 			try {
 				inputStream.readFully(fileArray);
 				fileBase64 = base64.encodeToString(fileArray);
-				
-				
-				Archivo file=new Archivo();
+
+				Archivo file = new Archivo();
 				file.setFileName(fileName);
 				file.setFileBase64(fileBase64);
 				file.setContentType(contentType);
 				
-				PrintWriter out=response.getWriter();
+				PrintWriter out = response.getWriter();
 				response.setContentType("text/html");
-				//out.println(file.toString());	
-				//out.println("Todo ok");
 				/*
-				 * Enviar paramtros POST
-				 * */
-				HttpURLConnection conn;
-				URL url = new URL("http://localhost:8080/RestJR/rest/Home/saludar/adrian");
-				conn=(HttpURLConnection)url.openConnection();
-				
-				conn.setRequestMethod("GET");
-				out.println(conn.getResponseCode());
-				InputStream is=conn.getInputStream();
-				out.println(is);
-				out.println(response.getWriter());
-				/*
-				 * Leer respuesta
+				 * out.println(file.toString()); // out.println("Todo ok"); /* Enviar paramtros
+				 * POST
 				 * 
-				BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream(),"utf-8"));
-				String respuesta=null;
-				StringBuilder strBlr=new StringBuilder();
-				
-				while ((respuesta=br.readLine())!=null) {
-					strBlr.append(respuesta);
-				}
-				
-				if(br!=null) {
-					br.close();
-					conn.disconnect();
-				}
-				out.println(strBlr);
-				*/
-				//conn.setDoOutput(true);
+				 * HttpURLConnection conn; URL url = new
+				 * URL("http://localhost:8080/RestJR/rest/Home/saludar/adrian"); conn =
+				 * (HttpURLConnection) url.openConnection(); conn.setRequestMethod("GET");
+				 * conn.setRequestProperty("Accept", "text/html");
+				 * conn.setRequestProperty("apellido", "Cruz islas");
+				 * out.println(conn.getResponseCode());
+				 */
+
+				response.setContentType("text/html");
+
+				HttpURLConnection conn;
+				URL url = new URL("http://localhost:8080/RestJR/rest/Home/recibirParametro");
+				conn = (HttpURLConnection) url.openConnection();
+				conn.setDoOutput(true);
+				conn.setDoInput(true);
+				conn.setRequestProperty("Content-Type", "application/json");
 				conn.setRequestProperty("Accept", "text/html");
-				conn.setRequestProperty("nombre","adrian");
+				conn.setRequestMethod("POST");
+
+				JSONObject json = new JSONObject();
+				json.put("fileName", fileName);
+				json.put("b64", "bagksjadguk");
+				json.put("Content-Type", contentType);
+
+				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+				wr.write(json.toString());
+				wr.flush();
 				
-				
-				
-			
-				
-				
-				
+				StringBuilder sb = new StringBuilder();
+				int HttpResult = conn.getResponseCode();
+				if (HttpResult == HttpURLConnection.HTTP_OK) {
+					BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+					String line = null;
+					while ((line = br.readLine()) != null) {
+						sb.append(line + "\n");
+					}
+					br.close();
+					out.println(sb.toString());
+				} else {
+					System.out.println(conn.getResponseMessage());
+					out.println(conn.getResponseMessage());
+				}
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-	
-			
+
 		}
+	}
+
+	public void Procesar(HttpServletRequest request, HttpServletResponse response) {
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+
+			response.setContentType("application/json");
+
+			HttpURLConnection conn;
+			URL url = new URL("http://localhost:8080/RestJR/rest/Home/recibirParametro");
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Accept", "application/json");
+			conn.setRequestProperty("archivo", "Cruz islas");
+			out.println(conn.getResponseCode());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 }

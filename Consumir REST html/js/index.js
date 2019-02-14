@@ -59,7 +59,10 @@ function consumirServlet(url, type, data) {
       processData: false,
       contentType: false,
       success: function(response) {
-        console.log(response);
+        var res = JSON.parse(response);
+        console.log(res);
+        console.log(res.b64);
+        $('#respuesta').addClass('badge-success').removeAttr('hidden').text("Archivo enviado correctamente");
       }
     });
   }
