@@ -57,12 +57,13 @@ function consumirServlet(url, type, data) {
       url: url,
       type: type,
       data: data,
+      dataType: 'JSON',
       processData: false,
       contentType: false,
       success: function(data) {
-        var res = JSON.parse(data);
-        console.log(res);
-        $('#respuesta').addClass('badge-success').removeAttr('hidden').text("Archivo enviado correctamente");
+        console.log(data);
+        var clase = data[0].status === true ? 'badge-success' : 'badge-danger';
+        $('#respuesta').addClass(clase).removeAttr('hidden').text(data[0].message);
       }
     });
   }

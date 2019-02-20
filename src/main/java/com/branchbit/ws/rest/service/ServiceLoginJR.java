@@ -42,8 +42,12 @@ public class ServiceLoginJR {
 	@Path("/recibirParametro")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Archivo getServlet(Archivo archivo) {
-		return archivo;
+	public Respuesta getServlet(Archivo archivo) {
+		Respuesta respuesta=new Respuesta(false,"El folio esta vacio, verifique");
+		if(!archivo.getFolio().isEmpty()) {
+			respuesta=new Respuesta(true,"Archivo procesado correctamente");
+		}
+		return respuesta;
 	}
 	
 	

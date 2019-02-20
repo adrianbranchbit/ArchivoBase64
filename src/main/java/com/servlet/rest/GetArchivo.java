@@ -86,13 +86,13 @@ public class GetArchivo extends HttpServlet {
 				fileBase64 = base64.encodeToString(fileArray);
 
 				Archivo file = new Archivo();
-				file.setFolio("123");
+				file.setFolio("asdnkjsa");
 				file.setFileName(fileName);
 				file.setFileBase64(fileBase64);
 				file.setContentType(contentType);
 				
 				PrintWriter out = response.getWriter();
-				response.setContentType("text/html");
+			//	response.setContentType("text/html");
 				
 				
 				HttpURLConnection conn;
@@ -119,14 +119,13 @@ public class GetArchivo extends HttpServlet {
 				
 				StringBuilder sb =new StringBuilder();
 				int HttpResult = conn.getResponseCode();
-				System.out.println(HttpResult);
 				if (HttpResult == HttpURLConnection.HTTP_OK) {
 					BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
 					String line = null;
 					while ((line = br.readLine()) != null) {
 						sb.append(line + "\n");
 					}
-					out.println("["+sb.toString()+"]");
+					out.print("["+sb.toString()+"]");
 					br.close();
 				} else {
 					System.out.println(conn.getResponseMessage());

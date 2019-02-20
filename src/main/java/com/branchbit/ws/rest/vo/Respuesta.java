@@ -3,9 +3,12 @@ package com.branchbit.ws.rest.vo;
 public class Respuesta {
 	private boolean status;
 	private String message;
+	
+	public Respuesta() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public Respuesta(boolean status, String message) {
-		super();
 		this.status = status;
 		this.message = message;
 	}
