@@ -22,7 +22,7 @@ public class ServiceLoginJR {
 	@Consumes({MediaType.TEXT_HTML})
 	@Produces({MediaType.TEXT_HTML})
 	public Response Saludar(@PathParam("nombre") String nombre) {
-		return Response.status(200).entity("Tu nombre es "+nombre).build();
+		return Response.status(200).entity("Tu nombre es sajdnsakjd "+nombre).build();
 	}
 	
 
@@ -41,10 +41,18 @@ public class ServiceLoginJR {
 	@POST
 	@Path("/recibirParametro")
 	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.TEXT_HTML})
-	public String getServlet(String json) {
-		return json;
+	@Produces({MediaType.APPLICATION_JSON})
+	public Archivo getServlet(Archivo archivo) {
+		return archivo;
 	}
 	
+	
+	@POST
+	@Path("/post")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Archivo post(Archivo archivo) {
+		return archivo;
+	}
 	
 }

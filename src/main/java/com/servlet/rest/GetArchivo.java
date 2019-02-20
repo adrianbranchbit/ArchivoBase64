@@ -69,7 +69,7 @@ public class GetArchivo extends HttpServlet {
 		 */
 		Part archivo = request.getPart("archivo");
 		int size = (int) archivo.getSize();
-
+	
 		// Declarar la dependencia en el pom.xml e importar la libreria
 		Base64 base64 = new Base64();
 
@@ -86,54 +86,48 @@ public class GetArchivo extends HttpServlet {
 				fileBase64 = base64.encodeToString(fileArray);
 
 				Archivo file = new Archivo();
+				file.setFolio("123");
 				file.setFileName(fileName);
 				file.setFileBase64(fileBase64);
 				file.setContentType(contentType);
 				
 				PrintWriter out = response.getWriter();
 				response.setContentType("text/html");
-				/*
-				 * out.println(file.toString()); // out.println("Todo ok"); /* Enviar paramtros
-				 * POST
-				 * 
-				 * HttpURLConnection conn; URL url = new
-				 * URL("http://localhost:8080/RestJR/rest/Home/saludar/adrian"); conn =
-				 * (HttpURLConnection) url.openConnection(); conn.setRequestMethod("GET");
-				 * conn.setRequestProperty("Accept", "text/html");
-				 * conn.setRequestProperty("apellido", "Cruz islas");
-				 * out.println(conn.getResponseCode());
-				 */
-
-				response.setContentType("text/html");
-
+				
+				
 				HttpURLConnection conn;
 				URL url = new URL("http://localhost:8080/RestJR/rest/Home/recibirParametro");
 				conn = (HttpURLConnection) url.openConnection();
 				conn.setDoOutput(true);
 				conn.setDoInput(true);
+				
+				//Asi error 415 application/json COnsumir json en el REST poner json aqui..aun no imprime
 				conn.setRequestProperty("Content-Type", "application/json");
-				conn.setRequestProperty("Accept", "text/html");
+				
+				conn.setRequestProperty("Accept", "application/json");
 				conn.setRequestMethod("POST");
 
 				JSONObject json = new JSONObject();
-				json.put("fileName", fileName);
-				json.put("b64", "bagksjadguk");
-				json.put("Content-Type", contentType);
-
+				json.put("folio",file.getFolio());
+				json.put("fileName", file.getFileName());
+				json.put("fileBase64", file.getFileBase64());
+				json.put("contentType", file.getContentType());
+				
 				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 				wr.write(json.toString());
 				wr.flush();
 				
-				StringBuilder sb = new StringBuilder();
+				StringBuilder sb =new StringBuilder();
 				int HttpResult = conn.getResponseCode();
+				System.out.println(HttpResult);
 				if (HttpResult == HttpURLConnection.HTTP_OK) {
 					BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
 					String line = null;
 					while ((line = br.readLine()) != null) {
 						sb.append(line + "\n");
 					}
+					out.println("["+sb.toString()+"]");
 					br.close();
-					out.println(sb.toString());
 				} else {
 					System.out.println(conn.getResponseMessage());
 					out.println(conn.getResponseMessage());
@@ -142,7 +136,6 @@ public class GetArchivo extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 		}
 	}
 

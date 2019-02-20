@@ -4,14 +4,15 @@ $(document).ready(function() {
       //  consumirServicio();
     });
   */
-  $("#frm").submit(function(e) {
-    e.preventDefault();
-    var url = $(this).attr("action");
-    var type = $(this).attr("method");
-    var data = new FormData($(this)[0]);
-    consumirServlet(url, type, data);
-  });
 });
+$("#frm").submit(function(e) {
+  e.preventDefault();
+  var url = $(this).attr("action");
+  var type = $(this).attr("method");
+  var data = new FormData($(this)[0]);
+  consumirServlet(url, type, data);
+});
+
 
 function consumirServicio() {
   var nombre = $('input[name=usuario]').val();
@@ -58,10 +59,9 @@ function consumirServlet(url, type, data) {
       data: data,
       processData: false,
       contentType: false,
-      success: function(response) {
-        var res = JSON.parse(response);
+      success: function(data) {
+        var res = JSON.parse(data);
         console.log(res);
-        console.log(res.b64);
         $('#respuesta').addClass('badge-success').removeAttr('hidden').text("Archivo enviado correctamente");
       }
     });
